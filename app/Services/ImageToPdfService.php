@@ -9,7 +9,7 @@ use RuntimeException;
 
 class ImageToPdfService
 {
-    
+
     /**
      * Create a new class instance.
      */
@@ -19,11 +19,15 @@ class ImageToPdfService
     {
         $tempDir = config('converter.temp_dir');
 
-        $extension = strtolower($file->getClientOriginalExtension());
 
-        $inputFileName= Str::uuid() . '.' . $extension;
+        $extension = $file->getClientOriginalExtension();
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeBaseName = Str::slug($originalName) ?: 'converted-file';
 
-        $outputFileName=Str::uuid() . '.' . 'pdf';
+
+
+        $inputFileName = Str::uuid() . '.' . $extension;
+        $outputFileName = Str::uuid() . '.' . 'pdf';
 
         $inputPath = $tempDir . DIRECTORY_SEPARATOR . $inputFileName;
         $outputPath = $tempDir . DIRECTORY_SEPARATOR . $outputFileName;
@@ -33,34 +37,29 @@ class ImageToPdfService
         $binary = config('converter.imagemagick', 'convert');
 
         $command = $binary === 'magick' ? [$binary, $inputPath, $outputPath] : [$binary, $inputPath, $outputPath];
-        
+
         $process = new Process($command);
         $process->setTimeout(60);
         $process->run();
 
 
-        
-        if(! $process->isSuccessful()){
-            if(file_exists($inputPath)){
-                @unlink($inputPath);
 
+        if (! $process->isSuccessful()) {
+            if (file_exists($inputPath)) {
+                @unlink($inputPath);
             }
             throw new RuntimeException('Image to PDF conversion failed: ' . $process->getErrorOutput());
-
         }
 
 
-        if (file_exists($inputPath)){
+        if (file_exists($inputPath)) {
             @unlink($inputPath);
-
         }
 
         return [
             'output_path' => $outputPath,
-            'output_name' => 'converter.pdf',
+            'output_name' => $safeBaseName . '.pdf',
 
         ];
-    
     }
-
 }

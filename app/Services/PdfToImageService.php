@@ -21,6 +21,10 @@ class PdfToImageService
             mkdir($tempDir, 0755, true);
         }
 
+
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeBaseName = Str::slug($originalName) ?: 'converted-file';
+
         $inputFileName = Str::uuid() . '.pdf';
         $outputBaseName = (string) Str::uuid();
         $outputFileName = $outputBaseName . '.png';
@@ -78,7 +82,7 @@ class PdfToImageService
 
         return [
             'output_path' => $outputPath,
-            'output_name' => 'converted-page-1.png',
+            'output_name' => $safeBaseName . '.png',
 
         ];
     }
