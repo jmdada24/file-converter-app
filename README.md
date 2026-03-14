@@ -1,59 +1,285 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# File Converter App
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A private file converter built with Laravel, Blade, Tailwind CSS, Docker, and Python.
 
-## About Laravel
+This project focuses on simple and privacy-friendly file conversion. Files are uploaded, converted, downloaded, and automatically removed from temporary storage after processing. The goal is to provide a safer alternative to random online converter websites by keeping the app straightforward and transparent.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Currently supported converters:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Image → PDF
+- PDF → Image
+- PDF → Word
 
-## Learning Laravel
+### Current behavior
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- upload a file
+- convert it on the server
+- download the converted result
+- automatically delete temporary files after sending the download
+- no permanent file storage
+- no database required for the current version
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Why this project exists
 
-## Laravel Sponsors
+Many free converter websites feel sketchy. Some users do not know what happens to their files after upload, and that creates trust issues, especially for personal, school, or work documents.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+This project was built as a hobby project and learning project with a privacy-first direction:
 
-### Premium Partners
+- simple conversion flow
+- temporary processing only
+- no user accounts
+- no conversion history storage
+- no unnecessary database setup
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Tech Stack
 
-## Contributing
+- **Backend:** Laravel 12
+- **Frontend:** Blade + Tailwind CSS
+- **Build tool:** Vite
+- **Containerization:** Docker + Docker Compose
+- **Conversion tools:**
+  - ImageMagick
+  - Ghostscript
+  - Python
+  - pdf2docx
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Supported Converters
 
-## Code of Conduct
+### Image → PDF
+Converts uploaded JPG, JPEG, PNG, and WEBP images into PDF files.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### PDF → Image
+Converts the first page of an uploaded PDF into a PNG image.
 
-## Security Vulnerabilities
+### PDF → Word
+Converts an uploaded PDF into a DOCX file using a Python-based conversion script.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Project Structure
+
+```text
+app/
+├── Http/Controllers/
+│   └── ConverterController.php
+├── Services/
+│   ├── ImageToPdfService.php
+│   ├── PdfToImageService.php
+│   └── PdfToWordService.php
+
+config/
+└── converter.php
+
+python/
+├── convert_pdf_to_docx.py
+└── requirements.txt
+
+resources/views/
+├── components/
+├── layouts/
+└── pages/
+
+routes/
+└── web.php
+
+## How it works
+
+The app uses a simple request flow:
+
+- User opens a converter page
+- User uploads a file
+- Laravel validates the request
+- A service class handles the conversion logic
+- The converted file is returned as a download
+- Temporary files are removed after processing
+
+## Privacy Approach
+
+This app is designed to be privacy-friendly:
+
+- Files are stored only temporarily during processing
+- Converted files are deleted after download
+- Uploaded source files are deleted after conversion
+- No database is used for storing user files
+- No user accounts are required
+
+This does not automatically make the app secure for all production use, but the project is intentionally designed to avoid unnecessary file retention.
+
+## Local Development
+
+### Requirements
+
+- PHP 8.2+
+- Composer
+- Node.js and npm
+- Docker and Docker Compose
+
+You can run the project either locally or through Docker, but Docker is the recommended setup for consistency.
+
+### Running with Docker
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/your-username/file-converter-app.git
+   cd file-converter-app
+   ```
+
+2. Copy environment file
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Set important environment values
+
+   Make sure these values are correct for Docker:
+
+   ```bash
+   APP_ENV=local
+   APP_DEBUG=true
+   SESSION_DRIVER=file
+
+   IMAGEMAGICK_BINARY=magick
+   GHOSTSCRIPT_BINARY=gs
+   PYTHON_BINARY=/opt/venv/bin/python
+   ```
+
+4. Start the containers
+   ```bash
+   docker compose up --build
+   ```
+
+5. Generate the application key
+
+   If needed:
+   ```bash
+   docker compose exec app php artisan key:generate
+   ```
+
+6. Clear config and cache if environment changes
+   ```bash
+   docker compose exec app php artisan optimize:clear
+   ```
+
+The app should then be available at: `http://localhost:8000`
+
+### Development Notes
+
+Because the project is mounted as a Docker volume, most source code changes are reflected immediately inside the container.
+
+Usually, you do not need to rebuild Docker when changing:
+
+- Controllers
+- Services
+- Routes
+- Blade views
+- Tailwind or frontend source files
+
+You usually do need to rebuild when changing:
+
+- Dockerfile
+- System packages
+- PHP extensions
+- Python dependencies
+- Major container configuration
+
+### Useful commands
+
+```bash
+docker compose up
+docker compose down
+docker compose exec app php artisan optimize:clear
+docker compose exec app composer dump-autoload
+```
+
+### PDF → Word Python Setup
+
+The PDF → Word converter uses Python and pdf2docx.
+
+Python dependencies are listed in: `python/requirements.txt`
+
+The conversion script is: `python/convert_pdf_to_docx.py`
+
+Inside Docker, the configured Python binary should be: `/opt/venv/bin/python`
+
+## Configuration
+
+Custom converter-related configuration lives in: `config/converter.php`
+
+Example:
+
+```php
+return [
+    'temp_dir' => storage_path('app/temp'),
+    'imagemagick' => env('IMAGEMAGICK_BINARY', 'magick'),
+    'ghostscript' => env('GHOSTSCRIPT_BINARY', 'gs'),
+    'python_binary' => env('PYTHON_BINARY', '/opt/venv/bin/python'),
+    'pdf_to_word_script' => env('PDF_TO_WORD_SCRIPT', base_path('python/convert_pdf_to_docx.py')),
+];
+```
+
+## Current Limitations
+
+This project is still evolving, and there are some known limitations:
+
+- PDF → Image currently converts the first page only
+- PDF → Word quality depends on the structure of the original PDF
+- Highly complex PDFs may not convert perfectly to DOCX
+- No async queue system yet for heavy conversions
+- No drag-and-drop upload UI yet
+- No progress tracking yet
+- Free hosting may struggle with large files or heavy usage
+
+## Deployment Notes
+
+This project is Dockerized and can be deployed to platforms that support Docker-based web services.
+
+A deployment target such as Render works well for hobby or demo use, especially because:
+
+- The app does not require a database
+- Files are temporary
+- Persistent storage is not required for the current architecture
+
+For production-style deployment, use environment variables such as:
+
+```bash
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:your-generated-key
+SESSION_DRIVER=file
+CACHE_STORE=file
+FILESYSTEM_DISK=local
+IMAGEMAGICK_BINARY=magick
+GHOSTSCRIPT_BINARY=gs
+PYTHON_BINARY=/opt/venv/bin/python
+```
+
+## Future Improvements
+
+Planned or possible future features:
+
+- Word → PDF
+- Merge PDF
+- Split PDF
+- Compress PDF
+- Image resize and compression
+- Reusable upload form component
+- Better loading states and conversion feedback
+- Scheduled cleanup fallback
+- Conversion registry pattern for scaling to more tools
+- Improved deployment setup for production
+
+## Learning Goals Behind This Project
+
+This project is also part of a hands-on learning journey around:
+
+- Laravel request lifecycle
+- Controllers and service classes
+- File uploads and downloads
+- Temporary file handling
+- Docker-based development
+- Integrating Python scripts into a Laravel application
+- Building a cleaner architecture for multiple converter tools
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-source and available under the MIT License.
