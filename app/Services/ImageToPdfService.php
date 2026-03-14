@@ -18,9 +18,11 @@ class ImageToPdfService
     public function convert(UploadedFile $file): array
     {
         $tempDir = config('converter.temp_dir');
+
         $extension = strtolower($file->getClientOriginalExtension());
 
         $inputFileName= Str::uuid() . '.' . $extension;
+
         $outputFileName=Str::uuid() . '.' . 'pdf';
 
         $inputPath = $tempDir . DIRECTORY_SEPARATOR . $inputFileName;
@@ -33,6 +35,7 @@ class ImageToPdfService
         $command = $binary === 'magick' ? [$binary, $inputPath, $outputPath] : [$binary, $inputPath, $outputPath];
         
         $process = new Process($command);
+        $process->setTimeout(60);
         $process->run();
 
 
