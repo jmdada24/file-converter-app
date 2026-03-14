@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     pkg-config \
-    procps \
     libzip-dev \
     libsqlite3-dev \
     sqlite3 \
@@ -41,9 +40,15 @@ RUN mkdir -p \
     storage/framework/views \
     && chmod -R 775 bootstrap/cache storage
 
-RUN composer install
-RUN npm install
+RUN composer install --no-dev --optimize-autoloader
+RUN npm install && npm run build
 
-EXPOSE 8000 5173
+ENV APP_ENV=production
+ENV APP_DEBUG=false
+ENV PYTHON_BINARY=/opt/venv/bin/python
+ENV IMAGEMAGICK_BINARY=magick
+ENV GHOSTSCRIPT_BINARY=gs
 
-CMD ["composer", "run", "dev"]
+EXPOSE 8000
+
+CMD sh -c "php artisan config:clear && php artisan route:clear && php artisan view:clear && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"

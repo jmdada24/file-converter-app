@@ -10,7 +10,7 @@
             Upload a PDF and convert its extracted text into a DOCX file.
         </p>
 
-        <form action="{{ route('pdf-to-word.convert') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-6">
+        <form action="{{ route('pdf-to-word.convert') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-6" onsubmit="handleConvertSubmit(this)">
             @csrf
 
             <div>
@@ -32,9 +32,20 @@
                 @enderror
             </div>
 
-            <button type="submit" class="inline-flex items-center rounded-xl bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400">
-                Convert to Word
+            <button
+                type="submit"
+                data-submit-button
+                class="inline-flex items-center rounded-xl bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+                <span data-default-text>Convert to Word</span>
+                <span data-loading-text class="hidden">Converting...</span>
             </button>
+
+
+            <p class="text-sm text-slate-400">
+                Please wait while your file is being processed. Do not close this tab.
+            </p>
+
         </form>
     </div>
 </div>

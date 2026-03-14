@@ -8,7 +8,7 @@
             Upload a PDF and convert the first page into a PNG image.
         </p>
 
-        <form action="{{ route('pdf-to-image.convert') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-6">
+        <form action="{{ route('pdf-to-image.convert') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-6" onsubmit="handleConvertSubmit(this)">
             @csrf
 
             <div>
@@ -30,10 +30,19 @@
 
             </div>
 
-            <button type="submit" class="inline-flex items-center rounded-xl bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400 ">
-                Convert to Image
-
+            <button
+                type="submit"
+                data-submit-button
+                class="inline-flex items-center rounded-xl bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+                <span data-default-text>Convert to Image</span>
+                <span data-loading-text class="hidden">Converting...</span>
             </button>
+
+
+            <p class="text-sm text-slate-400">
+                Please wait while your file is being processed. Do not close this tab.
+            </p>
 
         </form>
 

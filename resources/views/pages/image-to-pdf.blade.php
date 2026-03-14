@@ -8,7 +8,7 @@
                 Upload a JPG, PNG, or WEBP image and convert it into a PDF file.
             </p>
 
-            <form action="{{ route('image-to-pdf.convert') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-6">
+            <form action="{{ route('image-to-pdf.convert') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-6" onsubmit="handleConvertSubmit(this)">
                 @csrf
 
                 <div>
@@ -31,12 +31,22 @@
 
                 </div>
 
-                <button type="submit" class="inline-flex items-center rounded-xl bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400 ">
-                    Convert to PDF
-
+                <button
+                    type="submit"
+                    data-submit-button
+                    class="inline-flex items-center rounded-xl bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                    <span data-default-text>Convert to PDF</span>
+                    <span data-loading-text class="hidden">Converting...</span>
                 </button>
 
+                <p class="text-sm text-slate-400">
+                    Please wait while your file is being processed. Do not close this tab.
+                </p>
+
+                
             </form>
+
 
         </div>
         
