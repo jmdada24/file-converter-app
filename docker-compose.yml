@@ -1,0 +1,17 @@
+
+services:
+  app:
+    build: .
+    container_name: file-converter-app
+    working_dir: /var/www/html
+    ports:
+      - "8000:8000"
+      - "5173:5173"
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_ENV: local
+      APP_DEBUG: true
+      IMAGEMAGICK_BINARY: magick
+      GHOSTSCRIPT_BINARY: gs
+    command: sh -c "composer install && npm install && php artisan key:generate && composer run dev -- --host=0.0.0.0"
