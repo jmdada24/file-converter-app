@@ -13,3 +13,6 @@ Route::post('image-to-pdf', [ConverterController::class, 'convertImageToPdf'])->
 Route::get('/pdf-to-image', [ConverterController::class, 'pdfToImagePage'])->name('pdf-to-image.page');
 Route::post('/pdf-to-image', [ConverterController::class, 'convertPdfToImage'])->name('pdf-to-image.convert');
 
+
+Route::get('/pdf-to-word', [ConverterController::class, 'pdfToWordPage'])->name('pdf-to-word.page');
+Route::post('/pdf-to-word', [ConverterController::class, 'convertPdfToWord'])->name('pdf-to-word.convert');

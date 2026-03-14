@@ -16,14 +16,29 @@ RUN apt-get update && apt-get install -y \
     npm \
     imagemagick \
     ghostscript \
+    poppler-utils \
+    python3 \
+    python3-pip \
+    python3-venv \
     && docker-php-ext-install pdo_sqlite zip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+COPY python/requirements.txt /tmp/python-requirements.txt
+
+RUN python3 -m venv /opt/venv \
+    && /opt/venv/bin/pip install --upgrade pip \
+    && /opt/venv/bin/pip install --no-cache-dir -r /tmp/python-requirements.txt
+
 COPY . .
 
-RUN mkdir -p bootstrap/cache storage/app/temp storage/framework/cache storage/framework/sessions storage/framework/views \
+RUN mkdir -p \
+    bootstrap/cache \
+    storage/app/temp \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
     && chmod -R 775 bootstrap/cache storage
 
 RUN composer install

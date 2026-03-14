@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\ImageToPdfService;
 use App\Services\PdfToImageService;
+use App\Services\PdfToWordService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -23,6 +24,13 @@ class ConverterController extends Controller
     {
         return view('pages.pdf-to-image');
     }
+
+
+    public function pdfToWordPage()
+    {
+        return view('pages.pdf-to-word');
+    }
+
 
     public function convertImageToPdf(Request $request, ImageToPdfService $imageToPdfService): BinaryFileResponse
     {
@@ -56,4 +64,27 @@ class ConverterController extends Controller
 
         )->deleteFileAfterSend(true);
     }
+
+
+
+
+    public function convertPdfToWord(Request $request, PdfToWordService $pdfToWordService ): BinaryFileResponse{
+        
+        
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:pdf', 'max:10240'],
+        ]);
+
+        $result = $pdfToWordService->convert($request->file('file'));
+
+        return response()->download(
+            $result['output_path'],
+            $result['output_name'],
+
+        )->deleteFileAfterSend(true);
+        
+
+    }
+
+
 }

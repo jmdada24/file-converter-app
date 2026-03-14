@@ -8,3 +8,5 @@ storage/framework/views
 bootstrap/cache
 .env
 .DS_Store
+python/myenv
+python/venv

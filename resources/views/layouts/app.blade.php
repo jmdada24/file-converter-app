@@ -14,6 +14,7 @@
                 <a href="{{ route('home') }}" >Home</a>
                 <a href="{{ route('image-to-pdf.page') }}">Image → PDF</a>
                 <a href="{{ route('pdf-to-image.page') }}">PDF → Image</a>
+                <a href="{{ route('pdf-to-word.page') }}">PDF → Word</a>
             </nav>
         </div>
 

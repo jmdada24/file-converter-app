@@ -19,6 +19,9 @@ class ImageToPdfService
     {
         $tempDir = config('converter.temp_dir');
 
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
 
         $extension = $file->getClientOriginalExtension();
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);

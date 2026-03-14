@@ -21,6 +21,12 @@
         description="Convert a PDF page into an image for preview or export."
         :href="route('pdf-to-image.page')" />
 
-        
+
+    <x-converter-card
+        title="PDF → Word"
+        description="Convert PDF text into a DOCX file."
+        :href="route('pdf-to-word.page')" />
+
+    
 </section>
 @endsection
